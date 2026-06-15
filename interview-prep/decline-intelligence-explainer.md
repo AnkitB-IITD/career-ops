@@ -26,7 +26,7 @@ The dashboard contains zero payments knowledge of its own — every classificati
 ## Boot sequence
 
 1. **sample-data.js**: seeded PRNG (`mulberry32(20260611)` — identical data every reload) generates 2,000 txns / 30 days. Corridor mix: IN→US 42%, IN→UK 22%, US→IN 20%, IN→SG 16%. Each txn **walks its legs in order** (collection → correspondent → disbursement), rolling against per-leg failure rates (UPI ~3%, cards ~8%, ACH ~1.5%, ISO correspondent ~0.8%, disbursement 1.1–2.2%). First failing leg wins; txn records `(failedLeg, rail, code)`. Code drawn from weighted per-rail mixes matching real skew (R01 ≈ 45% of ACH collection returns; card 05 dominates). Every rate commented with its benchmark.
-2. **app.js**: `fetch('../data/taxonomy.json')` (why the repo must be *served*, not file://), builds dictionary keyed `rail:code`. Header line "taxonomy v0.1.0 · 166 codes · 6 rails" prints from the fetched meta — on-screen proof of the live join.
+2. **app.js**: `fetch('../data/taxonomy.json')` (why the repo must be *served*, not file://), builds dictionary keyed `rail:code`. Header line "taxonomy v0.2.0 · 166 codes · 6 rails" prints from the fetched meta — on-screen proof of the live join.
 3. **The join**: declined txn knows only `(rail, code)` — what a real system logs. `lookup()` adds the 5 derived dimensions: category, retryability, owner, customer message, ISO equivalent. Everything on screen is aggregation over this join.
 
 ## Example trace (TXN11410)
